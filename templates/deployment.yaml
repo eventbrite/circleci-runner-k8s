@@ -43,6 +43,15 @@ spec:
                 secretKeyRef:
                   key: runnerToken
                   name: {{ .Values.configSecret.name }}
+            - name: "CIRCLECI_RUNNER_API_AUTH_TOKEN"
+              valueFrom:
+                secretKeyRef:
+                  key: runnerToken
+                  name: {{ .Values.configSecret.name }}
+            - name: "CIRCLECI_RUNNER_NAME"
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             {{- range .Values.env }}
             - name: {{ .name }}
               {{- if .value }}
@@ -59,7 +68,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - ps -ef | grep circleci-launch-agent
+                - ps -ef | grep circleci-runner
             initialDelaySeconds: 3
             periodSeconds: 5
           resources:
